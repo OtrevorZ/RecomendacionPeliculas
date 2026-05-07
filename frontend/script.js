@@ -2,11 +2,14 @@ const API_KEY = "505ec6223740fa8bdd9b4eb7b67fbdd3";
 
 const moviesContainer = document.getElementById("movies");
 
-// 🔥 Películas populares
+
+// 🔥 CARGAR PELÍCULAS POPULARES
 fetch(`https://api.themoviedb.org/3/movie/popular?api_key=${API_KEY}&language=es-MX&page=1`)
   .then(res => res.json())
   .then(data => mostrarPeliculas(data.results));
 
+
+// 🎬 MOSTRAR PELÍCULAS
 function mostrarPeliculas(peliculas) {
 
   moviesContainer.innerHTML = "";
@@ -17,14 +20,6 @@ function mostrarPeliculas(peliculas) {
       <div class="card">
 
         <img src="https://image.tmdb.org/t/p/w500${movie.poster_path}">
-
-        <button onclick="agregarFavorito(
-  ${movie.id},
-  '${movie.title}',
-  '${movie.poster_path}'
-)">
-❤️ Favorito
-</button>
 
         <div class="card-content">
 
@@ -38,12 +33,25 @@ function mostrarPeliculas(peliculas) {
             ${movie.overview.substring(0, 100)}...
           </p>
 
+          <button 
+            onclick='agregarFavorito(
+              ${movie.id},
+              ${JSON.stringify(movie.title)},
+              ${JSON.stringify(movie.poster_path)}
+            )'
+          >
+            ❤️ Favorito
+          </button>
+
         </div>
 
       </div>
     `;
   });
 }
+
+
+// 🔎 BUSCAR PELÍCULAS
 function BuscarPeliculas() {
 
   const texto = document.getElementById("search").value;
@@ -53,6 +61,9 @@ function BuscarPeliculas() {
     .then(data => mostrarPeliculas(data.results));
 
 }
+
+
+// ❤️ AGREGAR A FAVORITOS
 function agregarFavorito(id, titulo, poster) {
 
   fetch("http://localhost:3000/api/favoritos", {
@@ -76,6 +87,11 @@ function agregarFavorito(id, titulo, poster) {
 
   .then(data => {
     alert(data);
+  })
+
+  .catch(error => {
+    console.error(error);
+    alert("Error al agregar favorito");
   });
 
 }
