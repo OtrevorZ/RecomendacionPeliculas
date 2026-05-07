@@ -18,6 +18,14 @@ function mostrarPeliculas(peliculas) {
 
         <img src="https://image.tmdb.org/t/p/w500${movie.poster_path}">
 
+        <button onclick="agregarFavorito(
+  ${movie.id},
+  '${movie.title}',
+  '${movie.poster_path}'
+)">
+❤️ Favorito
+</button>
+
         <div class="card-content">
 
           <h3>${movie.title}</h3>
@@ -36,12 +44,38 @@ function mostrarPeliculas(peliculas) {
     `;
   });
 }
-function buscarPeliculas() {
+function BuscarPeliculas() {
 
   const texto = document.getElementById("search").value;
 
   fetch(`https://api.themoviedb.org/3/search/movie?api_key=${API_KEY}&query=${texto}`)
     .then(res => res.json())
     .then(data => mostrarPeliculas(data.results));
+
+}
+function agregarFavorito(id, titulo, poster) {
+
+  fetch("http://localhost:3000/api/favoritos", {
+
+    method: "POST",
+
+    headers: {
+      "Content-Type": "application/json"
+    },
+
+    body: JSON.stringify({
+      usuario_id: 1,
+      pelicula_id: id,
+      titulo,
+      poster
+    })
+
+  })
+
+  .then(res => res.text())
+
+  .then(data => {
+    alert(data);
+  });
 
 }
